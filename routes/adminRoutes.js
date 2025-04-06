@@ -1,5 +1,6 @@
 import express from "express";
 import { registerCat, showCategorias } from "../controllers/categoriasController.js";
+
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { adminDashboard, inventarioPage } from "../controllers/dashboardController.js";
@@ -20,7 +21,7 @@ router.get(
   "/inventario",
   authMiddleware,
   roleMiddleware(["admin"]),
-  showCategorias
+  showCategorias,
 );
 
 

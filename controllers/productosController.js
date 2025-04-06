@@ -1,12 +1,12 @@
-import Producto from "../models/Productos.js";
+import Producto from "../models/Producto.js";
 import Categoria from "../models/Categoria.js";
 
 export const registerProd = async (req, res) => {
   console.log('Controlador registerProd invocado');
     try {
-    const { nombre, cantidad, precioC, precioV, categoriaP } = req.body;
+    const { categoriaP, nombre, cantidad, precioC, precioV,  } = req.body;
     const imagen = req.file ? req.file.filename : null;
-
+      console.log(req.body)
     let erroresBack = [];
 
     // Validaciones
@@ -48,11 +48,15 @@ export const registerProd = async (req, res) => {
     // Crear producto
     await Producto.create({
       nombre,
-      cantidad,
       precio_compra: precioC,
       precio_venta: precioV,
-      imagen,
+      ganancia: 0, 
+      cantidad_vendida: 0,
+      cantidad_actual: cantidad,
+      total: 0,
+      status: "disponible", 
       categoria_id: categoriaP, // Relación con la categoría
+      imagen,
     });
 
     req.flash('successMessage', 'Producto agregado exitosamente.');

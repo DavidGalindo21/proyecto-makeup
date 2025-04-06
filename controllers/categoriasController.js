@@ -1,4 +1,7 @@
 import Categoria from "../models/Categoria.js";
+import Producto from "../models/Producto.js";
+
+
 export const registerCat = async (req, res) => {
   try {
     const { nombre } = req.body;
@@ -51,7 +54,9 @@ export const registerCat = async (req, res) => {
 export const showCategorias = async (req, res) => {
   try {
 
+    
     const categorias = await Categoria.findAll();
+    const productos = await Producto.findAll();
 
     const erroresFlash = req.flash('errores');
     const successFlash = req.flash('successMessage');
@@ -59,6 +64,7 @@ export const showCategorias = async (req, res) => {
     res.render("inventario", {
       title: "Inventario",
       categorias,
+      productos,
       errores: erroresFlash.length ? JSON.parse(erroresFlash[0]) : [],
       successMessage: successFlash.length ? successFlash[0] : null,
       usuario: req.user,

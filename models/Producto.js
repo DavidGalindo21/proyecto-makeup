@@ -57,6 +57,9 @@ const Producto = sequelize.define(
       defaultValue: "disponible",
     },
   
+    
+  },
+  {
     tableName: "productos", // Nombre exacto de la tabla
     freezeTableName: true, // Desactiva pluralización automática
     timestamps: false, // Desactiva los timestamps automáticos
