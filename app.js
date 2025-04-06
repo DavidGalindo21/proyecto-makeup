@@ -5,8 +5,19 @@ import authRoutes from './routes/authRoutes.js';
 import rutasVistas from './routes/rutasVistas.js';
 import adminRoutes from './routes/adminRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
+import session from 'express-session';
+import flash from 'connect-flash';
 
 const app = express();
+
+app.use(session({
+  secret: 'mi_secreto',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(flash());
+
 
 // Configuración
 app.use(express.urlencoded({ extended: true }));

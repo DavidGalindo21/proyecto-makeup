@@ -92,7 +92,7 @@ export const login = async (req, res) => {
       return res.status(400).send("Credenciales inválidas");
     }
 
-    const token = jwt.sign({ id: user.Id, role: user.Rol }, "SECRET_KEY", {
+    const token = jwt.sign({ id: user.Id, role: user.Rol }, "SECRET_KEY",{
       expiresIn: "1h",
     });
     res.cookie("token", token, { httpOnly: true });
