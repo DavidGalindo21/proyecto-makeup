@@ -51,10 +51,9 @@ export const registerCat = async (req, res) => {
 };
 
 
+// Mostrar categorías y productos en inventario
 export const showCategorias = async (req, res) => {
   try {
-
-    
     const categorias = await Categoria.findAll();
     const productos = await Producto.findAll();
 
@@ -72,5 +71,97 @@ export const showCategorias = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener categorías:", error);
     res.status(500).send("Error al obtener categorías");
+  }
+};
+
+// Mostrar categorías y productos en la página del admin
+export const showCategoriasI = async (req, res) => {
+  try {
+    const categorias = await Categoria.findAll();
+    const productos = await Producto.findAll();
+
+    const erroresFlash = req.flash('errores');
+    const successFlash = req.flash('successMessage');
+
+    res.render("indexAdmin", {
+      title: "Inicio Admin",
+      categorias,
+      productos,
+      errores: erroresFlash.length ? JSON.parse(erroresFlash[0]) : [],
+      successMessage: successFlash.length ? successFlash[0] : null,
+      usuario: req.user,
+    });
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
+    res.status(500).send("Error al obtener categorías");
+  }
+};
+
+
+export const showCategoriasIC = async (req, res) => {
+  try {
+    const categorias = await Categoria.findAll();
+    const productos = await Producto.findAll();
+
+    const erroresFlash = req.flash('errores');
+    const successFlash = req.flash('successMessage');
+
+    res.render("index", {
+      title: "Inicio",
+      categorias,
+      productos,
+      errores: erroresFlash.length ? JSON.parse(erroresFlash[0]) : [],
+      successMessage: successFlash.length ? successFlash[0] : null,
+      usuario: req.user,
+    });
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
+    res.status(500).send("Error al obtener categorías");
+  }
+};
+
+
+export const eliminarCategoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const categoria = await Categoria.findByPk(id);
+    if (!categoria) {
+      return res.status(404).json({ mensaje: 'Categoría no encontrada' });
+    }
+
+    await categoria.destroy();
+
+    res.status(200).json({ mensaje: 'Categoría eliminada correctamente' });
+  } catch (error) {
+    console.error("Error al eliminar categoría:", error);
+    res.status(500).json({ mensaje: 'Error al eliminar categoría' });
+  }
+};
+
+export const editarCategoria = async (req, res) => {
+  try {
+    const { idc, nombrec } = req.body;
+    const nuevaImagen = req.file ? req.file.filename : null;
+
+    const categoria = await Categoria.findByPk(idc);
+
+    if (!categoria) {
+      req.flash('errores', JSON.stringify([{ mensaje: "Categoría no encontrada" }]));
+      return res.redirect("/admin/inventario");
+    }
+
+    categoria.Nombre = nombrec;
+    if (nuevaImagen) {
+      categoria.Imagen = nuevaImagen;
+    }
+
+    await categoria.save();
+
+    req.flash('successMessage', 'Categoría actualizada correctamente.');
+    res.redirect("/admin/inventario");
+  } catch (error) {
+    console.error("Error al editar categoría:", error);
+    res.status(500).send("Error al actualizar la categoría");
   }
 };

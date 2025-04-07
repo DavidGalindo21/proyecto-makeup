@@ -67,3 +67,22 @@ export const registerProd = async (req, res) => {
     res.status(500).send("Error interno del servidor al registrar producto");
   }
 };
+
+
+export const eliminarProducto = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const producto = await Producto.findByPk(id);
+    if (!producto) {
+      return res.status(404).json({ mensaje: 'Producto no encontrado' });
+    }
+
+    await producto.destroy();
+
+    res.status(200).json({ mensaje: 'Producto eliminado correctamente' });
+  } catch (error) {
+    console.error("Error al eliminar producto:", error);
+    res.status(500).json({ mensaje: 'Error al eliminar producto' });
+  }
+};

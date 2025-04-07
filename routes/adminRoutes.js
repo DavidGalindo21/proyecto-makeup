@@ -1,10 +1,10 @@
 import express from "express";
-import { registerCat, showCategorias } from "../controllers/categoriasController.js";
+import { registerCat, showCategorias,eliminarCategoria,showCategoriasI} from "../controllers/categoriasController.js";
 
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { adminDashboard, inventarioPage } from "../controllers/dashboardController.js";
-import { registerProd } from "../controllers/productosController.js";
+import { registerProd,eliminarProducto } from "../controllers/productosController.js";
 import upload from "../middlewares/multer.js"; 
 
 
@@ -14,7 +14,7 @@ router.get(
   "/dashboard",
   authMiddleware,
   roleMiddleware(["admin"]),
-  adminDashboard
+  adminDashboard,
 );
 
 router.get(
@@ -24,7 +24,19 @@ router.get(
   showCategorias,
 );
 
+router.route("/inventario/eliminar/categoria/:id")
+  .delete(
+    authMiddleware,
+    roleMiddleware(["admin"]),
+    eliminarCategoria 
+  );
 
+router.route("/inventario/eliminar/producto/:id")
+  .delete(
+    authMiddleware,
+    roleMiddleware(["admin"]),
+    eliminarProducto // Función que maneja la eliminación de productos
+  );
 
 
 router.post("/inventario/categorias", upload.single("fotoC"), registerCat);

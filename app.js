@@ -33,7 +33,7 @@ app.use('/admin', adminRoutes);
 app.use('/client', clientRoutes);
 
 // Iniciar servidor
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, async () => {
   console.log(`Servidor en http://localhost:${PORT}`);
   try {

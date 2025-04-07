@@ -1,14 +1,28 @@
 import express from "express";
+import Categoria from "../models/Categoria.js";
+import Producto from "../models/Producto.js";
+
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.render("index", {
-    title: "Inicio",
-    errores: [],
-    successMessage: null,
-    usuario: req.user,
+router.get("/", async (req, res) => {
+    try {
+      const categorias = await Categoria.findAll();
+      const productos = await Producto.findAll();
+  
+      res.render("index", {
+        title: "Inicio",
+        categorias,
+        productos,
+        errores: [],
+        successMessage: null,
+        usuario: req.user || null, // Si está autenticado, se muestra el usuario
+      });
+    } catch (error) {
+      console.error("Error al cargar página de inicio:", error);
+      res.status(500).send("Error al cargar la página de inicio");
+    }
   });
-});
+
 router.get("/account-login", (req, res) => {
   res.render("account-login", {
     title: "Register",

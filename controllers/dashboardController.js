@@ -1,10 +1,16 @@
 import User from "../models/Users.js";
+import Categoria from "../models/Categoria.js";
+import Producto from "../models/Producto.js";
 
-//rutas admin
 export const adminDashboard = async (req, res) => {
   try {
     const users = await User.findAll();
+    const categorias = await Categoria.findAll();  
+    const productos = await Producto.findAll();   
+
     res.render("indexAdmin", {
+      categorias,
+      productos,
       usuario: users,
       title: "Inicio Admin",
       successMessage: null,
@@ -14,14 +20,19 @@ export const adminDashboard = async (req, res) => {
   }
 };
 
+// Página de inventario
 export const inventarioPage = async (req, res) => {
   try {
+    const categorias = await Categoria.findAll();  // Obtener categorías
+    const productos = await Producto.findAll();   // Obtener productos
+
     res.render("inventario", {
       title: "Inventario",
       categorias,
+      productos,
       usuario: req.user || null, 
-      errores:[],
-      successMessage:  "", 
+      errores: [],
+      successMessage: "", 
     });
   } catch (error) {
     console.error("Error en inventarioPage:", error);
@@ -31,13 +42,16 @@ export const inventarioPage = async (req, res) => {
 
 
 
-
 export const clientDashboard = async (req, res) => {
   try {
-    console.log("Datos del usuario:", req.user); // Para depuración
+    const categorias = await Categoria.findAll();  
+    const productos = await Producto.findAll();   
     const user = await User.findByPk(req.user.id);
     res.render("index", {
       usuario: user,
+      categorias,
+      productos,
+
       title: "Inicio",
       successMessage: null,
     });
