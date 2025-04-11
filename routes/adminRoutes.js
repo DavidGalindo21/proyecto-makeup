@@ -1,5 +1,5 @@
 import express from "express";
-import { registerCat, showCategorias,eliminarCategoria,showCategoriasI} from "../controllers/categoriasController.js";
+import { registerCat, showCategorias,eliminarCategoria, showProductosPorCategoria} from "../controllers/categoriasController.js";
 
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
@@ -30,15 +30,22 @@ router.route("/inventario/eliminar/categoria/:id")
     roleMiddleware(["admin"]),
     eliminarCategoria 
   );
+   
+  router.get(
+         "/product",
+          authMiddleware,
+          roleMiddleware(["admin"]),
+          showCategorias,
+    );
 
-router.route("/inventario/eliminar/producto/:id")
-  .delete(
-    authMiddleware,
-    roleMiddleware(["admin"]),
-    eliminarProducto // Función que maneja la eliminación de productos
-  );
-
-
+    router.get(
+      "/productos/categoria/:categoriaId", // Aquí el `:categoriaId` es el parámetro de la ruta
+      authMiddleware,
+      roleMiddleware(["admin"]),
+      showProductosPorCategoria
+    );
+    
+    
 router.post("/inventario/categorias", upload.single("fotoC"), registerCat);
 router.post("/inventario/producto", upload.single("fotoP"), registerProd);
 export default router;

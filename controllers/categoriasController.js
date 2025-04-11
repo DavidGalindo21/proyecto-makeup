@@ -121,6 +121,29 @@ export const showCategoriasIC = async (req, res) => {
 };
 
 
+export const showCategoriasIn = async (req, res) => {
+  try {
+    const categorias = await Categoria.findAll();
+    const productos = await Producto.findAll();
+
+    const erroresFlash = req.flash('errores');
+    const successFlash = req.flash('successMessage');
+
+    res.render("product", {
+      title: "Productos",
+      categorias,
+      productos,
+      errores: erroresFlash.length ? JSON.parse(erroresFlash[0]) : [],
+      successMessage: successFlash.length ? successFlash[0] : null,
+      usuario: req.user,
+    });
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
+    res.status(500).send("Error al obtener categorías");
+  }
+};
+
+
 export const eliminarCategoria = async (req, res) => {
   try {
     const { id } = req.params;
@@ -163,5 +186,34 @@ export const editarCategoria = async (req, res) => {
   } catch (error) {
     console.error("Error al editar categoría:", error);
     res.status(500).send("Error al actualizar la categoría");
+  }
+};
+
+
+export const showProductosPorCategoria = async (req, res) => {
+  try {
+    const { categoriaId } = req.params;
+
+    // Verifica que categoriaId esté definido
+    if (!categoriaId) {
+      return res.status(400).send("ID de categoría no proporcionado");
+    }
+
+    // Filtra productos por categoría
+    const productos = await Producto.findAll({
+      where: { categoriaId }, // Asegúrate de que `categoriaId` exista en la base de datos
+    });
+
+    if (!productos.length) {
+      return res.status(404).send("No se encontraron productos para esta categoría");
+    }
+
+    res.render("productosPorCategoria", {
+      title: "Productos por Categoría",
+      productos,
+    });
+  } catch (error) {
+    console.error("Error al obtener productos por categoría:", error);
+    res.status(500).send("Error interno del servidor");
   }
 };

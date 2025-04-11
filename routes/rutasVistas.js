@@ -3,12 +3,11 @@ import Categoria from "../models/Categoria.js";
 import Producto from "../models/Producto.js";
 
 const router = express.Router();
+const categorias = await Categoria.findAll();
+const productos = await Producto.findAll();
 
 router.get("/", async (req, res) => {
     try {
-      const categorias = await Categoria.findAll();
-      const productos = await Producto.findAll();
-  
       res.render("index", {
         title: "Inicio",
         categorias,
@@ -22,6 +21,38 @@ router.get("/", async (req, res) => {
       res.status(500).send("Error al cargar la página de inicio");
     }
   });
+
+  router.get('/product',(req,res)=>{
+    try {   
+        res.render("product", {
+          title: "roducto",
+          categorias,
+          productos,
+          errores: [],
+          successMessage: null,
+          usuario: req.user || null, // Si está autenticado, se muestra el usuario
+        });
+      } catch (error) {
+        console.error("Error al cargar página de inicio:", error);
+        res.status(500).send("Error al cargar la página de inicio");
+      }
+})
+
+router.get('/product',(req,res)=>{
+    try {   
+        res.render("product", {
+          title: "roducto",
+          categorias,
+          productos,
+          errores: [],
+          successMessage: null,
+          usuario: req.user || null, // Si está autenticado, se muestra el usuario
+        });
+      } catch (error) {
+        console.error("Error al cargar página de inicio:", error);
+        res.status(500).send("Error al cargar la página de inicio");
+      }
+})
 
 router.get("/account-login", (req, res) => {
   res.render("account-login", {
